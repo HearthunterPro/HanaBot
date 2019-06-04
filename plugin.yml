@@ -1,0 +1,7 @@
+name: HanaBot
+main: mc.CushyPro.HanaBot.Main
+version: 1.2
+author: CushyPro
+commands:
+  hana:
+    description: All Command
