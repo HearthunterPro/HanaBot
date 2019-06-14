@@ -8,7 +8,8 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.TwoArgFunction;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
 import mc.CushyPro.HanaBot.Data;
@@ -17,17 +18,67 @@ import mc.CushyPro.HanaBot.LuaFile;
 public class EventCall extends ZeroArgFunction {
 
 	public static List<EventCall> listevent = new ArrayList<EventCall>();
+	public static List<EventCall> priorityListfrist = new ArrayList<EventCall>();
+	public static List<EventCall> priorityList = new ArrayList<EventCall>();
+	public static boolean loadsucc = false;
 
 	public static LuaTable table;
 
-	public static void loadall(String event) {
+	public static void loadallpriority(boolean k) {
+		List<EventCall> list = new ArrayList<EventCall>();
 		for (EventCall eventcall : listevent) {
-			if (eventcall.eventcall != null) {
-				if (!eventcall.eventcall.equalsIgnoreCase(event)) {
-					continue;
+			if (eventcall.seteventsuc == k) {
+				list.add(eventcall);
+			}
+		}
+
+		while (list.size() > 1) {
+			EventCall ds = list.get(0);
+			for (EventCall ec : list) {
+				if (ds.priority > ec.priority) {
+					ds = ec;
 				}
 			}
-			eventcall.load();
+
+			if (k) {
+				priorityListfrist.add(ds);
+			} else {
+				priorityList.add(ds);
+			}
+			list.remove(ds);
+		}
+		
+		if (k) {
+			priorityListfrist.addAll(list);
+		} else {
+			priorityList.addAll(list);
+		}
+	}
+
+	public static void loadall(String event, boolean fast) {
+		if (loadsucc == false) {
+			loadallpriority(true);
+			loadallpriority(false);
+			loadsucc = true;
+		}
+		if (fast) {
+			for (EventCall eventcall : priorityListfrist) {
+				if (eventcall.eventcall != null) {
+					if (!eventcall.eventcall.equalsIgnoreCase(event)) {
+						continue;
+					}
+				}
+				eventcall.load(fast);
+			}
+		} else {
+			for (EventCall eventcall : priorityList) {
+				if (eventcall.eventcall != null) {
+					if (!eventcall.eventcall.equalsIgnoreCase(event)) {
+						continue;
+					}
+				}
+				eventcall.load(fast);
+			}
 		}
 	}
 
@@ -35,6 +86,8 @@ public class EventCall extends ZeroArgFunction {
 	protected String Code;
 	protected LuaFile luafile;
 	protected String eventcall;
+	private boolean seteventsuc;
+	private double priority;
 
 	public EventCall() {
 
@@ -95,7 +148,7 @@ public class EventCall extends ZeroArgFunction {
 		EventCall.table = table;
 	}
 
-	public void load() {
+	public void load(boolean fast) {
 		if (table == null) {
 			return;
 		}
@@ -111,7 +164,7 @@ public class EventCall extends ZeroArgFunction {
 		globals.set("eventcall", table);
 
 		if (luafile != null) {
-			luafile.load(globals);
+			luafile.load(globals, (fast == false));
 		} else if (this.luaFunction != null) {
 			if (this.Code == null) {
 				LoadCodeFuntion();
@@ -120,35 +173,58 @@ public class EventCall extends ZeroArgFunction {
 		}
 	}
 
-	public class pull extends TwoArgFunction {
+	public boolean isSeteventsuc() {
+		return seteventsuc;
+	}
+
+	public void setSeteventsuc(boolean seteventsuc) {
+		this.seteventsuc = seteventsuc;
+	}
+
+	public class pull extends VarArgFunction {
 
 		@Override
-		public LuaValue call(LuaValue args, LuaValue args2) {
-			if (args.isfunction() || args.isstring()) {
+		public Varargs invoke(Varargs args) {
+
+			if (args.isfunction(1) || args.isstring(1)) {
 				EventCall event = null;
-				if (args.isstring()) {
-					LuaFile k = Data.loadlua.getFile(args.checkjstring());
+				if (args.isstring(1)) {
+					LuaFile k = Data.loadlua.getFile(args.checkjstring(1));
 					if (k != null) {
 						event = new EventCall(k);
 					} else {
-						return LuaValue.valueOf("not have File : " + args.checkjstring());
+						return LuaValue.valueOf("not have File : " + args.checkjstring(1));
 					}
-				} else if (args.isfunction()) {
-					event = new EventCall(args.checkfunction());
+				} else if (args.isfunction(1)) {
+					event = new EventCall(args.checkfunction(1));
 				}
 
 				if (event == null) {
 					return LuaValue.valueOf(false);
 				}
-				if (args2.isstring()) {
-					event.setEvent(args2.checkjstring());
+				if (args.isstring(2)) {
+					event.setEvent(args.checkjstring(2));
+				}
+				if (!args.isnil(3)) {
+					event.setSeteventsuc(args.checkboolean(3));
+				}
+				if (args.isnumber(4)) {
+					event.priority(args.checknumber(4).checkdouble());
 				}
 				listevent.add(event);
 				return LuaValue.valueOf(true);
 			}
-			return LuaValue.valueOf("pull(string filename,string event)");
+			return LuaValue.valueOf("pull(string filename,string event,boolean setevent,number priority)");
 		}
 
+	}
+
+	public double getpriority() {
+		return priority;
+	}
+
+	public void priority(double number) {
+		priority = number;
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.script.ScriptException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.luaj.vm2.LuaTable;
@@ -40,7 +41,60 @@ public class Server extends ZeroArgFunction {
 		library.set("actionbar", new actionbar());
 		library.set("title", new title());
 		library.set("calculator", new calculator());
+		library.set("getNear", new getnear());
 		return library;
+	}
+
+	public class getnear extends VarArgFunction {
+
+		@Override
+		public Varargs invoke(Varargs args) {
+			int size = 0;
+			while (!args.isnil(size + 1)) {
+				size++;
+			}
+
+			LuaTable table = new LuaTable();
+			if (size == 2) {
+				double r = args.checkdouble(1);
+				String k = args.checkjstring(2);
+				if (Bukkit.getPlayer(k) != null) {
+					Player player = Bukkit.getPlayer(k);
+					for (Entity en : player.getNearbyEntities(r, r, r)) {
+						if (en instanceof Player) {
+							table.set(((Player) en).getPlayer().getName(), en.getType().toString());
+						} else {
+							table.set(en.getUniqueId().toString(), en.getType().toString());
+						}
+					}
+					return table;
+				} else {
+					return LuaValue.valueOf("Player not online");
+				}
+			} else if (size == 5) {
+				double r = args.checkdouble(1);
+				double x = args.checkdouble(2);
+				double y = args.checkdouble(3);
+				double z = args.checkdouble(4);
+				String world = args.checkjstring(5);
+				if (Bukkit.getWorld(world) != null) {
+					World worlds = Bukkit.getWorld(world);
+					Location loc = new Location(worlds, x, y, z);
+					for (Entity en : worlds.getNearbyEntities(loc, r, r, r)) {
+						if (en instanceof Player) {
+							table.set(((Player) en).getPlayer().getName(), en.getType().toString());
+						} else {
+							table.set(en.getUniqueId().toString(), en.getType().toString());
+						}
+					}
+					return table;
+				} else {
+					return LuaValue.valueOf("not have world : " + world);
+				}
+			}
+			return NIL;
+		}
+
 	}
 
 	public class calculator extends OneArgFunction {
@@ -127,8 +181,8 @@ public class Server extends ZeroArgFunction {
 		@Override
 		public LuaValue call(LuaValue args, LuaValue args2) {
 			if (args.isstring() && args2.isstring()) {
-				String name = args.checkjstring();
-				String msg = args2.checkjstring();
+				final String name = args.checkjstring();
+				final String msg = args2.checkjstring();
 				Player player = Bukkit.getPlayer(name);
 				if (player != null) {
 					try {
@@ -183,8 +237,10 @@ public class Server extends ZeroArgFunction {
 		@Override
 		public LuaValue call() {
 			LuaTable table = new LuaTable();
+			int k = 1;
 			for (World world : Bukkit.getWorlds()) {
-				table.add(LuaValue.valueOf(world.getName()));
+				table.set(k, LuaValue.valueOf(world.getName()));
+				k++;
 			}
 			return table;
 		}
@@ -196,8 +252,10 @@ public class Server extends ZeroArgFunction {
 		@Override
 		public LuaValue call() {
 			LuaTable table = new LuaTable();
+			int k = 1;
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				table.add(LuaValue.valueOf(player.getName()));
+				table.set(k, LuaValue.valueOf(player.getName()));
+				k++;
 			}
 			return table;
 		}
@@ -252,7 +310,7 @@ public class Server extends ZeroArgFunction {
 					}
 					return LuaValue.valueOf("player is not online");
 				}
-				
+
 			}
 			return LuaValue.valueOf("kick(String PlayerName/console,String cpmmand)");
 		}

@@ -58,19 +58,28 @@ public class LuaFile {
 		return list;
 	}
 
-	public void load(Globals globals) {
-		try {
-			Thread thread = new Thread(new Runnable() {
+	public void load(Globals globals, boolean threads) {
+		if (threads) {
+			try {
+				Thread thread = new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					LuaValue chunk = globals.load(LuaFile.this.Code);
-					chunk.call();
-				}
-			});
-			thread.start();
-		} catch (Exception e) {
-			e.printStackTrace();
+					@Override
+					public void run() {
+						LuaValue chunk = globals.load(LuaFile.this.Code);
+						chunk.call();
+					}
+				});
+				thread.start();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				LuaValue chunk = globals.load(LuaFile.this.Code);
+				chunk.call();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return;

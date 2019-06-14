@@ -11,6 +11,7 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.ThreeArgFunction;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
@@ -47,7 +48,14 @@ public class ReadCodeHana {
 		st.set("startswith", new startsWith());
 		st.set("endswith", new endsWith());
 		st.set("contains", new contains());
+		st.set("index", new index());
+		st.set("indexl", new indexl());
+		st.set("split", new split());
+		st.set("replace", new replace());
 		st.set("equalsignorecase", new equalsIgnoreCase());
+
+		LuaTable tb = globals.get("table").checktable();
+		tb.set("find", new findtable());
 
 		globals.set("loadfile", new loadlua());
 		globals.set("print", new printsys(null));
@@ -55,6 +63,82 @@ public class ReadCodeHana {
 		globals.set("sleep", new sleep());
 
 		loadChatColor();
+
+	}
+
+	public class replace extends ThreeArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2, LuaValue args3) {
+			if (args.isstring() && args2.isstring()) {
+				String k = args.checkjstring();
+				k = k.replace(args2.checkjstring(), args3.checkjstring());
+				return LuaValue.valueOf(k);
+			}
+			return LuaValue.valueOf(false);
+		}
+
+	}
+
+	public class findtable extends TwoArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2) {
+			if (args.istable()) {
+				LuaTable table = args.checktable();
+				for (LuaValue k : table.keys()) {
+					String va = table.get(k).checkjstring();
+					if (va.equalsIgnoreCase(args2.checkjstring())) {
+						return LuaValue.valueOf(true);
+					}
+				}
+			}
+			return LuaValue.valueOf(false);
+		}
+
+	}
+
+	public class split extends TwoArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2) {
+			LuaTable table = new LuaTable();
+			if (args.isstring() && args2.isstring()) {
+				String k = args.checkjstring();
+				String[] d = k.split(args2.checkjstring());
+				for (int x = 1; x < d.length + 1; x++) {
+					table.set(x, LuaValue.valueOf(d[x - 1]));
+				}
+
+			}
+			return table;
+		}
+
+	}
+	
+	public class indexl extends TwoArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2) {
+			if (args.isstring() && args2.isstring()) {
+				String d = args.checkjstring();
+				return LuaValue.valueOf(d.lastIndexOf(args2.checkjstring()) + 1);
+			}
+			return LuaValue.valueOf(-1);
+		}
+
+	}
+
+	public class index extends TwoArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2) {
+			if (args.isstring() && args2.isstring()) {
+				String d = args.checkjstring();
+				return LuaValue.valueOf(d.indexOf(args2.checkjstring()) + 1);
+			}
+			return LuaValue.valueOf(-1);
+		}
 
 	}
 

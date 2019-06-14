@@ -225,6 +225,9 @@ public class DataBase extends ZeroArgFunction {
 			}
 			if (args.isstring()) {
 				if (Map.containsKey(args.checkjstring())) {
+					if (Map.get(args.checkjstring()) == null) {
+						return NIL;
+					}
 					return Map.get(args.checkjstring());
 				}
 				return NIL;
@@ -239,6 +242,10 @@ public class DataBase extends ZeroArgFunction {
 		@Override
 		public LuaValue call(LuaValue str, LuaValue args) {
 			if (str.isstring()) {
+				if (args.isnil()) {
+					Map.put(str.checkjstring(), null);
+					return LuaValue.valueOf(true);
+				}
 				Map.put(str.checkjstring(), args);
 				return LuaValue.valueOf(true);
 			}

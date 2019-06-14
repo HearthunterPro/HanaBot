@@ -64,6 +64,7 @@ public class LoadLua {
 			LuaFile LuaFile = getFile("ini.lua");
 			LuaFile.loadfile(readCodeHana.getGlobals());
 		}
+		
 	}
 
 	private void loadFile(File file) {

@@ -15,7 +15,7 @@ import org.luaj.vm2.LuaValue;
 import mc.CushyPro.HanaBot.Luas.EventCall;
 
 public class EventListener implements Listener {
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void Quit(PlayerCommandPreprocessEvent e) {
 		HashMap<String, LuaValue> map = new HashMap<String, LuaValue>();
@@ -25,12 +25,12 @@ public class EventListener implements Listener {
 
 		EventCall.setTable("PlayerCommand", map);
 		// load
-		EventCall.loadall("PlayerCommand");
+		EventCall.loadall("PlayerCommand", true);
 		LuaTable table = EventCall.table;
 
 		e.setMessage(table.get("Command").checkjstring());
 		e.setCancelled(table.get("Cancel").checkboolean());
-
+		EventCall.loadall("PlayerCommand", false);
 		EventCall.table = null;
 	}
 
@@ -43,12 +43,12 @@ public class EventListener implements Listener {
 		EventCall.setTable("PlayerQuitEvent", map);
 
 		// load
-		EventCall.loadall("PlayerQuitEvent");
+		EventCall.loadall("PlayerQuitEvent", true);
 
 		LuaTable table = EventCall.table;
 
 		e.setQuitMessage((table.get("Message").checkjstring()));
-
+		EventCall.loadall("PlayerJoinEvent", false);
 		EventCall.table = null;
 	}
 
@@ -61,12 +61,12 @@ public class EventListener implements Listener {
 		EventCall.setTable("PlayerJoinEvent", map);
 
 		// load
-		EventCall.loadall("PlayerJoinEvent");
+		EventCall.loadall("PlayerJoinEvent", true);
 
 		LuaTable table = EventCall.table;
 
 		e.setJoinMessage((table.get("Message").checkjstring()));
-
+		EventCall.loadall("PlayerJoinEvent", false);
 		EventCall.table = null;
 	}
 
@@ -79,12 +79,12 @@ public class EventListener implements Listener {
 
 		EventCall.setTable("PlayerChatEvent", map);
 		// load
-		EventCall.loadall("PlayerChatEvent");
+		EventCall.loadall("PlayerChatEvent", true);
 		LuaTable table = EventCall.table;
 
 		e.setMessage(table.get("Message").checkjstring());
 		e.setCancelled(table.get("Cancel").checkboolean());
-		
+		EventCall.loadall("PlayerChatEvent", false);
 		EventCall.table = null;
 	}
 
