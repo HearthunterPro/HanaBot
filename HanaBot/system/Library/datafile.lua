@@ -30,7 +30,6 @@ end
 
 function m.search(msg,sh)
 	local file = io.open("plugins/HanaBot/data/datachat.txt" , "r")
-	print(msg)
 	for line in file:lines() do 
 		print(line)
 		local h,e = m.linefd(line)
