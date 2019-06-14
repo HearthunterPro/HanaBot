@@ -1,0 +1,17 @@
+Prefix: '&c[%lvl%❤&c]&8[&dAdmin&8] &4&l!&bHana>&r'
+MaxLevel: -50:100
+Level:
+  '-25': '&0'
+  '0': '&f'
+  '100': '&d'
+  '90': '&5'
+  '-50': '&8'
+  '80': '&3'
+  '70': '&b'
+  '60': '&a'
+  '-10': '&7'
+  '40': '&6'
+  '20': '&c'
+  '10': '&4'
+MessageType:
+  NOPERMISSION: §aYou not have permission
