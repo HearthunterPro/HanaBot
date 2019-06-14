@@ -1,0 +1,32 @@
+"where am i", -1, 0 > "you are in mc-test.net" , 0.5, 0
+"who", -1, 0 > "who?, me?" , 0.5, 15
+"hi", -1, 0 > "Hi %player%" , 0.5, 0
+"who are you", -1, 0 > "i am Botchat in server this." ,0.5, 0
+"who am i", -1, 0> "you are player in server this." ,0.5, 0
+"i love", -1, 0>"what you love?", 0.5, 5
+"i love you", -1, 0 > "I don't know you but thank you." , 0.5, 0
+"i am batman", -1, 0 > "You are not batman, I'm batman." , 0.5, 0
+"i am", -1, 0 > "what are you.",0.5,0
+"you", 0, 0 > "what are you." , 0.5, 0
+"you", 5, 0 > "I don't know you but thank you." , 0.5, 0
+"where are you", 0, 0 > "I am everywhere." , 0.5, 0
+"how are you", 0, 0 > "i'm fine." , 0.5, 0
+"how do you do", 0, 0 > "how do you do" , 0.5, 0
+"how to play", 0, 0 > "You have to survive with other player." , 0.5, 0
+"how to player game", 0, 0 > "You have to survive." , 0.5, 0
+"how much", 0, 0 > "What, how much?" , 0.5, 0
+"how much money", 0, 0 > "I don't have money." , 0.5, 0
+"how much money do you have", 0, 0 > "I don't have money." , 0.5, 0
+"how much money do she have", 0, 0 > "nil" , 0.5, 0, shehavemoney
+"how old are you", 0, 0 > "i 18 year old." , 0.5, 0
+"yes", 4, 1 > "what is yes." , 0.5, 0
+"yes", 15, 0 > "i am Botchat in server this." , 0.5, 0
+"yes", 1001, 0 > "ask me come." , 0.5, 0
+"no", 4, 1 > "what is no." , 0.5, 0
+"no", 15, 0 > "who is you mean?" , 0.5, 0
+"no", 1001, 0 > "ok" , 0.5, 0, exitchat
+"find log ", -1, 0 > "nil" , 0.5, 16, findlog
+"show ", 16, 0 > "nil" , 0.5, 17, findlog2
+"yes", 16, 0 > "nil" , 0.5, 17, findlog2
+"yes", 17, 0 > "nil" , 0.5, 16, findlog3
+"no", 17, 0 > "nil" , 0.5, 16,findlog3
