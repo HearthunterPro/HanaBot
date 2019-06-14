@@ -1,4 +1,4 @@
-local s = require("systemfile")
+local system = require("systemfile")
 
 
 local mytable = {
@@ -22,9 +22,8 @@ local mytable = {
 
 local link = "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/Library/"
 
-s.download("plugin\Hanabot\system\ini.lua", "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/ini.lua")
-
+system.download("plugin/Hanabot/system/ini.lua", "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/ini.lua")
 
 for key,value in pairs(mytable) do
-	s.download("plugin\\Hanabot\\system\\Library\\" ..value, "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/" .. value)
+	system.download("plugin//Hanabot//system//Library//" ..value, link .. value)
 end
