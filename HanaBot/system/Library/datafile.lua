@@ -1,4 +1,4 @@
-local file = io.open("plugins/HanaBot/data/datachat.data" , "r")
+local file = io.open("plugins/HanaBot/data/datachat.txt" , "r")
 
 local m = {}
 
