@@ -1,5 +1,3 @@
-local file = io.open("plugins/HanaBot/data/datachat.txt" , "r")
-
 local m = {}
 
 function findstr(str)
@@ -31,7 +29,10 @@ end
 
 
 function m.search(msg,sh)
+	local file = io.open("plugins/HanaBot/data/datachat.txt" , "r")
+	print(msg)
 	for line in file:lines() do 
+		print(line)
 		local h,e = m.linefd(line)
 		local h2,h3,h4 = findstr(h)
 		
@@ -65,10 +66,6 @@ function m.search(msg,sh)
 		
 	end
 	return false
-end
-
-function m.f()
-	return file
 end
 
 return m
