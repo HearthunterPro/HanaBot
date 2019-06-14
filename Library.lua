@@ -22,8 +22,8 @@ local mytable = {
 
 local link = "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/Library/"
 
-system.download("plugin/Hanabot/system/ini.lua", "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/ini.lua")
+system.download("plugins/Hanabot/system/ini.lua", "https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/HanaBot/system/ini.lua")
 
 for key,value in pairs(mytable) do
-	system.download("plugin//Hanabot//system//Library//" ..value, link .. value)
+	system.download("plugins//Hanabot//system//Library//" ..value, link .. value)
 end
