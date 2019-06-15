@@ -1,1 +1,1 @@
-LibraryVersion=1.2
+LibraryVersion=1.3
