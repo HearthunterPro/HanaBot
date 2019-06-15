@@ -75,13 +75,22 @@ function m.call(name,message,setdata)
 				
 			elseif x5 == "findlog" then
 				local as = string.replace(message, "find log ", "")
-				local mytable,lined,fline = findlog.find(message)
+				local mytable,lined = findlog.find(as)
 				database.set("findlog", mytable)
 				
 				sleep(0.5)
-				hanachat.send("I can found " .. fline .. " line of " .. lined)
-				sleep(1)
-				hanachat.send("Do you want me to show all?")
+				hanachat.send("I can found " .. #mytable .. " line of " .. lined)
+				if #mytable > 0 then
+					sleep(1)
+					hanachat.send("Do you want me to show all?")
+				elseif #mytable <= 0 then
+					sleep(1)
+					hanachat.send("cant show, not have line found")
+					if setdata then
+						a(name, 20, 2)
+					end
+				end
+				
 			elseif x5 == "findlog2" then
 				local as = "all"
 				if string.contains(message, "show ") then
@@ -115,6 +124,11 @@ function m.call(name,message,setdata)
 						end
 					end
 				end
+				
+			elseif x5 == "findlog4" then
+				database.set("findlog", nil)
+				database.set("findlog.show", nil)
+				
 				
 			end
 		end

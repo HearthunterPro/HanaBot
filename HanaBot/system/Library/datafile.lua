@@ -31,14 +31,38 @@ end
 function m.search(msg,sh)
 	local file = io.open("plugins/HanaBot/data/datachat.txt" , "r")
 	for line in file:lines() do 
+		local ms = 0
+		if string.startswith(line, "$") then
+			ms = 1
+			line = string.sub(line,2)
+		elseif string.startswith(line, "%") then
+			ms = 2
+			line = string.sub(line,2)
+		end
+		
 		local h,e = m.linefd(line)
 		local h2,h3,h4 = findstr(h)
 		
 		h4 = tonumber(h4)
 		
 		local reading = false
+		local reading2 = false
 		
-		if msg == h2 then
+		if ms == 0 then
+			if msg == h2 then
+				reading2 = true
+			end
+		elseif ms == 1 then
+			if string.startswith(msg,h2) then
+				reading2 = true
+			end
+		elseif ms == 2 then
+			if string.contains(msg,h2) then
+				reading2 = true
+			end
+		end
+		
+		if reading2 then
 			if h3 == -1 or h3 == 0 then
 				reading = true
 			end

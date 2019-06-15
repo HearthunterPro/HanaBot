@@ -10,14 +10,14 @@ function m.money(name)
 	return moneys
 end
 
-function hanac(name, num)
+function m.hanac(name, num)
 	local moneys = money.get(name)
 	if (num == 0) then
 		hanachat.send("you have money " .. moneys)
 	end
 end
 
-function findpay(message,finding)
+function m.findpay(message,finding)
 	local k = string.index(message, finding)
 	local d = string.sub(message, k+string.len(finding)+1)
 	k = string.index(d, " ")
@@ -47,14 +47,14 @@ function m.call(name,message)
 			hanachat.send("I not have money but i think.")
 		end
 		sleep(1)
-		hanac(name,0)
+		m.hanac(name,0)
 		return true
 	elseif string.contains(newm,"pay") or string.contains(newm,"paid") then
 		local k = nil
 		if string.contains(newm,"pay") then
-			k = findpay(newm, "pay ")
+			k = m.findpay(newm, "pay ")
 		elseif string.contains(newm,"paid") then
-			k = findpay(newm, "paid ")
+			k = m.findpay(newm, "paid ")
 		end
 		k = tonumber(k)
 		sleep(1)

@@ -1,3 +1,6 @@
+MessageType:
+  NOPERMISSION: §aYou not have permission
+LibraryVersion: '1.2'
 Prefix: '&c[%lvl%❤&c]&8[&dAdmin&8] &4&l!&bHana>&r'
 MaxLevel: -50:100
 Level:
@@ -13,5 +16,3 @@ Level:
   '40': '&6'
   '20': '&c'
   '10': '&4'
-MessageType:
-  NOPERMISSION: §aYou not have permission

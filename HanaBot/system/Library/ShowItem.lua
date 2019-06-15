@@ -3,28 +3,28 @@ local database = require("database")
 local server = require("server")
 local m = {}
 
-function a(name,slot)
+function m.a(name,slot)
 	local tb = database.getInfo(name)
 	
 	if slot == 1 then
 		sleep(0.5)
-		b(name,tb.ItemInHand)
+		m.b(name,tb.ItemInHand)
 	elseif slot == 2 then
 		sleep(1)
-		b(name,tb.ItemInHelmet)
+		m.b(name,tb.ItemInHelmet)
 	elseif slot == 3 then
 		sleep(1)
-		b(name,tb.ItemInChestplate)
+		m.b(name,tb.ItemInChestplate)
 	elseif slot == 4 then
 		sleep(1)
-		b(name,tb.ItemInLeggings)
+		m.b(name,tb.ItemInLeggings)
 	elseif slot == 5 then
 		sleep(1)
-		b(name,tb.ItemInBoots)
+		m.b(name,tb.ItemInBoots)
 	end
 end
 
-function b(name,items)
+function m.b(name,items)
 	hanachat.setlevel(name)
 	if items.Type == "AIR" then
 		hanachat.send("your item in slot that is AIR")
@@ -71,7 +71,9 @@ end
 
 function m.call(name,message)
 	local tbm = string.split(message, " ")
+	
 	if tbm[1] == "show" and tbm[2] == "item" then
+		
 		local slot = nil
 		if (tbm[3] == "in" or tbm[3] == "on") then
 			if tbm[4] == "my" then
@@ -88,19 +90,19 @@ function m.call(name,message)
 		end
 		
 		if (slot == "hand") then
-			a(name, 1)
+			m.a(name, 1)
 			return true
 		elseif (slot == "head" or slot == "helmet") then
-			a(name, 2)
+			m.a(name, 2)
 			return true
 		elseif (slot == "chestplate") then
-			a(name, 3)
+			m.a(name, 3)
 			return true
 		elseif (slot == "legging") then
-			a(name, 4)
+			m.a(name, 4)
 			return true
 		elseif (slot == "boot" or slot == "boots") then
-			a(name, 5)
+			m.a(name, 5)
 			return true
 		end
 		sleep(0.2)

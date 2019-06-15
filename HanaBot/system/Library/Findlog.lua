@@ -1,23 +1,29 @@
-local file = io.open("logs/latest.log" , "r")
 local hanachat = require("hanachat")
 
 local m = {}
 
 
 function m.find(msg)
+	local file = io.open("logs/latest.log" , "r")
+	local linetable = {}
 	local l = 0
-	local s = 0
-	local mtb = {}
 	for line in file:lines() do 
-		if string.contains(line,msg) then
-			if string.contains(line,"Hana") == false then
-				table.insert(mtb,line)
-				s = s + 1
-			end
-		end
+		table.insert(linetable, line)
 		l = l + 1
 	end
-	return mtb, l, s
+	io.close(file)
+	
+	local mtb = {}
+	print(msg)
+	for key,line in pairs(linetable) do 
+		if string.contains(string.lower(line),msg) then
+			if string.contains(line,"Hana") == false then
+				table.insert(mtb,line)
+			end
+		end
+		
+	end
+	return mtb, l
 end
 
 function m.f()

@@ -17,16 +17,17 @@
 "how much", 0, 0 > "What, how much?" , 0.5, 0
 "how much money", 0, 0 > "I don't have money." , 0.5, 0
 "how much money do you have", 0, 0 > "I don't have money." , 0.5, 0
-"how much money do she have", 0, 0 > "nil" , 0.5, 0, shehavemoney
+"how much money do she have", 0, 0 > "nil" , 0.5, 0,shehavemoney
 "how old are you", 0, 0 > "i 18 year old." , 0.5, 0
 "yes", 4, 1 > "what is yes." , 0.5, 0
 "yes", 15, 0 > "i am Botchat in server this." , 0.5, 0
 "yes", 1001, 0 > "ask me come." , 0.5, 0
 "no", 4, 1 > "what is no." , 0.5, 0
 "no", 15, 0 > "who is you mean?" , 0.5, 0
-"no", 1001, 0 > "ok" , 0.5, 0, exitchat
-"find log ", -1, 0 > "nil" , 0.5, 16, findlog
-"show ", 16, 0 > "nil" , 0.5, 17, findlog2
-"yes", 16, 0 > "nil" , 0.5, 17, findlog2
-"yes", 17, 0 > "nil" , 0.5, 16, findlog3
+"no", 1001, 0 > "ok" , 0.5, 0,exitchat
+$"find log ", -1, 0 > "nil" , 0.5, 16,findlog
+$"show ", 16, 0 > "nil" , 0.5, 17,findlog2
+"yes", 16, 0 > "nil" , 0.5, 17,findlog2
+"yes", 17, 0 > "nil" , 0.5, 16,findlog3
 "no", 17, 0 > "nil" , 0.5, 16,findlog3
+"no", 16, 0 > "ok, clear data" , 0.5, 0,findlog4
