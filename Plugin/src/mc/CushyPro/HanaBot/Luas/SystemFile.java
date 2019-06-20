@@ -1,11 +1,17 @@
 package mc.CushyPro.HanaBot.Luas;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
@@ -13,6 +19,7 @@ import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
 import mc.CushyPro.HanaBot.Data;
+import net.md_5.bungee.api.ChatColor;
 
 public class SystemFile extends ZeroArgFunction {
 
@@ -20,7 +27,59 @@ public class SystemFile extends ZeroArgFunction {
 	public LuaValue call() {
 		LuaTable library = new LuaTable();
 		library.set("loadyml", new loadyml());
+		library.set("download", new download());
 		return library;
+	}
+
+	public class download extends TwoArgFunction {
+
+		@Override
+		public LuaValue call(LuaValue args, LuaValue args2) {
+			if (args.isstring() && args2.isstring()) {
+				String locate = args.checkjstring();
+				String url = args2.checkjstring();
+				File file = new File(locate);
+				try {
+					if (!file.exists()) {
+						
+						String lo = file.getPath();
+						lo = lo.replace(file.getName(), "");
+						if (!new File(lo).exists()) {
+							new File(lo).mkdirs();
+						}
+						
+						file.createNewFile();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error File: " + locate);
+					return LuaValue.valueOf(false);
+				}
+				try {
+					InputStream input = new URL(url).openStream();
+					BufferedInputStream in = new BufferedInputStream(input);
+					FileOutputStream fileOutputStream = new FileOutputStream(locate);
+					byte dataBuffer[] = new byte[1024];
+					int bytesRead;
+					int d = input.available();
+					while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+						fileOutputStream.write(dataBuffer, 0, bytesRead);
+						Thread.sleep(100);
+						long persen = fileOutputStream.getChannel().size() / d * 100;
+						Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Downloading File: " + file.getName() + " - " + persen + "%");
+					}
+					fileOutputStream.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error Download File: " + url + " to " + locate);
+					return LuaValue.valueOf(false);
+				}
+
+				return LuaValue.valueOf(true);
+			}
+			throw new LuaError("download(string locatefile,string url)");
+		}
+
 	}
 
 	public class loadyml extends OneArgFunction {
@@ -39,9 +98,10 @@ public class SystemFile extends ZeroArgFunction {
 			library.set("getBoolean", new getBoolean());
 			library.set("getTable", new getTable());
 			library.set("save", new save());
+
 			return library;
 		}
-		
+
 		public class getTable extends OneArgFunction {
 
 			@Override
@@ -51,7 +111,7 @@ public class SystemFile extends ZeroArgFunction {
 					if (cfg.isSet(m)) {
 						List<String> list = cfg.getStringList(m);
 						LuaTable table = new LuaTable();
-						for(String l : list) {
+						for (String l : list) {
 							table.add(LuaValue.valueOf(l));
 						}
 						return table;

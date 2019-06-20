@@ -70,14 +70,14 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		Data.loadFileConfig();
-		Data.LoadConfig();
-
+		
 		Data.getFile("system//").mkdir();
 		Data.getFile("system//Library//").mkdir();
 		Data.getFile("data//").mkdir();
 		Data.getFile("data//player//").mkdir();
+
+		Data.loadFileConfig();
+		Data.LoadConfig();
 
 		LoadLua.loadFileandClass();
 

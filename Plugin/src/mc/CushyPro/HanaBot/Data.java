@@ -1,14 +1,23 @@
 package mc.CushyPro.HanaBot;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.luaj.vm2.LuaValue;
 
 public class Data {
 
@@ -45,6 +54,10 @@ public class Data {
 				}
 			}
 		}
+		if (!cfg.isSet("LibraryVersion")) {
+			String version = DefaultLibrary();
+			cfg.set("LibraryVersion", version);
+		}
 
 		if (!cfg.isSet("Prefix")) {
 			cfg.set("Prefix", "&c[%lvl%❤&c]&8[&dAdmin&8] &4&l!&bHana>&r");
@@ -72,6 +85,65 @@ public class Data {
 		}
 
 		saveConfig();
+	}
+
+	private static String DefaultLibrary() {
+		try {
+			DownloadAddoneMoneyAutoFrist();
+			
+			String version = "0";
+			if (true) {
+				InputStream input = new URL("https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/ver.txt")
+						.openStream();
+				List<String> list = IOUtils.readLines(input);
+
+				version = list.get(0).replace("LibraryVersion=", "");
+			}
+
+			InputStream input = new URL("https://raw.githubusercontent.com/HearthunterPro/HanaBot/master/Library.lua")
+					.openStream();
+			List<String> list = IOUtils.readLines(input);
+			String code = "";
+			for (String l : list) {
+				code = code + l + "\n";
+			}
+
+			LuaValue chunk = loadlua.readCodeHana.getGlobals().load(code);
+			chunk.call();
+			
+			return version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+			return null;
+		}
+	}
+
+	private static void DownloadAddoneMoneyAutoFrist() {
+		try {
+			URL url = new URL("https://github.com/HearthunterPro/HanaBot/raw/master/HanaBot/lib/AddonMoney.jar");
+			
+			InputStream inStream = url.openStream();
+			Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Download AddonMoney.jar Successful please reload Server");
+			BufferedInputStream bufIn = new BufferedInputStream(inStream);
+
+			File fileWrite = new File("plugins//HanaBot//lib//AddonMoney.jar");
+			OutputStream out = new FileOutputStream(fileWrite);
+			BufferedOutputStream bufOut = new BufferedOutputStream(out);
+			byte buffer[] = new byte[1024];
+			while (true) {
+				int nRead = bufIn.read(buffer, 0, buffer.length);
+				if (nRead <= 0)
+					break;
+				bufOut.write(buffer, 0, nRead);
+			}
+
+			bufOut.flush();
+			out.close();
+			inStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String getlevel(int level) {
